@@ -52,14 +52,29 @@
 
         .particle {
             position: absolute;
-            background: rgba(40, 167, 69, 0.6);
-            border-radius: 50%;
+            font-size: 1.2rem;
+            font-weight: bold;
             animation: float 15s infinite ease-in-out;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0; }
-            50% { transform: translateY(-100px) rotate(180deg); opacity: 1; }
+        .particle.green {
+            color: #28a745;
+            animation: floatUp 15s infinite ease-in-out;
+        }
+
+        .particle.red {
+            color: #dc3545;
+            animation: floatDown 15s infinite ease-in-out;
+        }
+
+        @keyframes floatUp {
+            0%, 100% { transform: translateY(100vh); opacity: 0; }
+            50% { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes floatDown {
+            0%, 100% { transform: translateY(0); opacity: 0; }
+            50% { transform: translateY(100vh); opacity: 1; }
         }
 
         /* Header */
@@ -354,7 +369,7 @@
     <!-- Animated Grid Background -->
     <div class="grid-background"></div>
     
-    <!-- Floating Particles -->
+ Україну<!-- Floating Particles -->
     <div class="particles" id="particles"></div>
 
     <!-- Header -->
@@ -771,17 +786,23 @@
         function createParticles() {
             const container = document.getElementById('particles');
             const particleCount = 50;
+            const symbols = ['$100', '$500', '$1000', '$50', '$200', '100', '500', '1000', '50', '200'];
             
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'particle';
                 
+                // Randomly choose if green (going up) or red (going down)
+                const isGreen = Math.random() < 0.5;
+                particle.classList.add(isGreen ? 'green' : 'red');
+                
+                // Random symbol from the array
+                particle.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+                
                 // Random size and position
-                const size = Math.random() * 4 + 2;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
+                const size = Math.random() * 10 + 10;
+                particle.style.fontSize = `${size}px`;
                 particle.style.left = `${Math.random() * 100}%`;
-                particle.style.top = `${Math.random() * 100}%`;
                 
                 // Random animation delay
                 particle.style.animationDelay = `${Math.random() * 15}s`;
