@@ -1,0 +1,25 @@
+{
+  "name": "libri-website",
+  "version": "1.0.0",
+  "description": "Futuristic landing page for Libri.io Personal Finance Manager",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "serve": "npx http-server -p 8000",
+    "dev": "npx live-server --port=8000"
+  },
+  "keywords": [
+    "finance",
+    "personal-finance",
+    "electron",
+    "futuristic",
+    "jarvis",
+    "ui"
+  ],
+  "author": "Joana",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "live-server": "^1.2.2"
+  }
+}

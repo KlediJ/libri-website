@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Libri.io - Advanced Financial Intelligence</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #000;
+            color: #00ffff;
+            overflow-x: hidden;
+            cursor: crosshair;
+        }
+
+        .jarvis-container {
+            position: relative;
+            min-height: 100vh;
+            background: 
+                radial-gradient(ellipse at center, #001122 0%, #000000 70%),
+                linear-gradient(135deg, #000428 0%, #004e92 100%);
+            background-blend-mode: multiply;
+        }
+
+        .scan-lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 255, 255, 0.03) 2px,
+                rgba(0, 255, 255, 0.03) 4px
+            );
+            animation: scanLines 2s linear infinite;
+        }
+
+        @keyframes scanLines {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(4px); }
+        }
+
+        .neural-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 255, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(0, 255, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 60% 20%, rgba(0, 255, 255, 0.08) 0%, transparent 50%);
+            animation: neuralPulse 6s ease-in-out infinite alternate;
+        }
+
+        @keyframes neuralPulse {
+            0% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.02); }
+            100% { opacity: 0.5; transform: scale(1); }
+        }
+
+        .header {
+            position: relative;
+            z-index: 10;
+            padding: 30px 0;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 15px;
+            animation: logoGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes logoGlow {
+            0% { filter: drop-shadow(0 0 20px #00ffff); }
+            100% { filter: drop-shadow(0 0 40px #00ffff); }
+        }
+        
+        .logo img {
+            width: 80px;
+            height: 80px;
+            filter: brightness(1.2) contrast(1.1);
+            animation: logoRotate 20s linear infinite;
+        }
+
+        @keyframes logoRotate {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.05); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+        
+        .logo-text {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: #00ffff;
+            text-shadow: 
+                0 0 20px #00ffff,
+                0 0 40px #00ffff,
+                0 0 60px #00ffff;
+            animation: textFlicker 4s ease-in-out infinite;
+        }
+
+        @keyframes textFlicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+            75% { opacity: 0.9; }
+        }
+
+        .tagline {
+            font-size: 1.4rem;
+            color: #66d9ff;
+            opacity: 0.9;
+            font-family: 'Segoe UI', sans-serif;
+            letter-spacing: 2px;
+            animation: taglinePulse 5s ease-in-out infinite;
+        }
+
+        @keyframes taglinePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .status-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #00ffff, #0066cc, #00ffff);
+            animation: statusFlow 3s ease-in-out infinite;
+            z-index: 100;
+        }
+
+        @keyframes statusFlow {
+            0% { transform: translateX(-100%); }
+            50% { transform: translateX(0%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .main-content {
+            position: relative;
+            z-index: 5;
+            padding: 60px 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .architecture-title {
+            text-align: center;
+            font-size: 3rem;
+            color: #00ffff;
+            margin-bottom: 60px;
+            text-shadow: 0 0 30px #00ffff;
+            position: relative;
+        }
+
+        .architecture-title::before,
+        .architecture-title::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ffff, transparent);
+        }
+
+        .architecture-title::before {
+            left: -120px;
+        }
+
+        .architecture-title::after {
+            right: -120px;
+        }
+
+        .mind-map {
+            position: relative;
+            width: 100%;
+            height: 700px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1000px;
+        }
+
+        .layer {
+            position: absolute;
+            background: rgba(0, 255, 255, 0.08);
+            border: 2px solid #00ffff;
+            border-radius: 25px;
+            padding: 25px;
+            backdrop-filter: blur(15px);
+            box-shadow: 
+                0 0 30px rgba(0, 255, 255, 0.4),
+                inset 0 0 20px rgba(0, 255, 255, 0.1);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+            transform-style: preserve-3d;
+        }
+
+        .layer:hover {
+            transform: scale(1.08) rotateY(5deg) rotateX(5deg);
+            box-shadow: 
+                0 0 50px rgba(0, 255, 255, 0.6),
+                inset 0 0 30px rgba(0, 255, 255, 0.2);
+            background: rgba(0, 255, 255, 0.15);
+            border-color: #66ffff;
+        }
+
+        .layer h3 {
+            color: #00ffff;
+            margin-bottom: 12px;
+            font-size: 1.6rem;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .layer p {
+            color: #66d9ff;
+            font-size: 1rem;
+            line-height: 1.5;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .electron-layer {
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 280px;
+            animation: layerFloat1 6s ease-in-out infinite;
+        }
+
+        .data-layer {
+            top: 280px;
+            left: 15%;
+            width: 250px;
+            animation: layerFloat2 7s ease-in-out infinite;
+        }
+
+        .presentation-layer {
+            top: 280px;
+            right: 15%;
+            width: 250px;
+            animation: layerFloat3 8s ease-in-out infinite;
+        }
+
+        .core-features {
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 320px;
+            animation: layerFloat4 5s ease-in-out infinite;
+        }
+
+        @keyframes layerFloat1 {
+            0%, 100% { transform: translateX(-50%) translateY(0px); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        @keyframes layerFloat2 {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(1deg); }
+        }
+
+        @keyframes layerFloat3 {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-6px) rotate(-1deg); }
+        }
+
+        @keyframes layerFloat4 {
+            0%, 100% { transform: translateX(-50%) translateY(0px); }
+            50% { transform: translateX(-50%) translateY(-12px); }
+        }
+
+        .connection-line {
+            position: absolute;
+            height: 3px;
+            background: linear-gradient(90deg, #00ffff, #0088ff, #00ffff);
+            box-shadow: 0 0 15px #00ffff;
+            animation: dataFlow 3s ease-in-out infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes dataFlow {
+            0% { 
+                opacity: 0.3; 
+                box-shadow: 0 0 10px #00ffff;
+                background: linear-gradient(90deg, #00ffff, #0088ff, #00ffff);
+            }
+            50% { 
+                opacity: 1; 
+                box-shadow: 0 0 25px #00ffff;
+                background: linear-gradient(90deg, #66ffff, #00aaff, #66ffff);
+            }
+            100% { 
+                opacity: 0.3; 
+                box-shadow: 0 0 10px #00ffff;
+                background: linear-gradient(90deg, #00ffff, #0088ff, #00ffff);
+            }
+        }
+
+        .line1 {
+            top: 180px;
+            left: 28%;
+            width: 220px;
+            transform: rotate(-25deg);
+            animation-delay: 0s;
+        }
+
+        .line2 {
+            top: 180px;
+            right: 28%;
+            width: 220px;
+            transform: rotate(25deg);
+            animation-delay: 1s;
+        }
+
+        .line3 {
+            bottom: 180px;
+            left: 32%;
+            width: 180px;
+            transform: rotate(35deg);
+            animation-delay: 2s;
+        }
+
+        .line4 {
+            bottom: 180px;
+            right: 32%;
+            width: 180px;
+            transform: rotate(-35deg);
+            animation-delay: 0.5s;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 80px;
+        }
+
+        .feature-card {
+            background: rgba(0, 255, 255, 0.06);
+            border: 1px solid rgba(0, 255, 255, 0.4);
+            border-radius: 20px;
+            padding: 35px;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .feature-card:hover::before {
+            left: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(0, 255, 255, 0.3);
+            border-color: #00ffff;
+        }
+
+        .feature-card h4 {
+            color: #00ffff;
+            font-size: 1.7rem;
+            margin-bottom: 18px;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .feature-card p {
+            color: #66d9ff;
+            line-height: 1.7;
+            font-size: 1.1rem;
+        }
+
+        .cta-section {
+            text-align: center;
+            margin-top: 80px;
+            padding: 50px 20px;
+            background: rgba(0, 255, 255, 0.08);
+            border-radius: 30px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 18px 50px;
+            background: transparent;
+            border: 2px solid #00ffff;
+            color: #00ffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.4s ease;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
+            position: relative;
+            z-index: 10;
+        }
+
+        .cta-button:hover {
+            background: #00ffff;
+            color: #000;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 40px rgba(0, 255, 255, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .logo-text {
+                font-size: 2.5rem;
+            }
+            
+            .mind-map {
+                height: 900px;
+            }
+            
+            .layer {
+                position: relative;
+                margin: 25px auto;
+                width: 90% !important;
+                animation: none !important;
+            }
+            
+            .electron-layer, .data-layer, .presentation-layer, .core-features {
+                position: relative;
+                left: auto;
+                right: auto;
+                top: auto;
+                bottom: auto;
+                transform: none !important;
+            }
+            
+            .connection-line {
+                display: none;
+            }
+            
+            .architecture-title::before,
+            .architecture-title::after {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="status-bar"></div>
+    <div class="scan-lines"></div>
+    
+    <div class="jarvis-container">
+        <div class="neural-background"></div>
+        
+        <header class="header">
+            <div class="logo">
+                <img src="logo.jpg" alt="Libri Logo" />
+                <h1 class="logo-text">LIBRI.IO</h1>
+            </div>
+            <p class="tagline">ADVANCED FINANCIAL INTELLIGENCE SYSTEM</p>
+        </header>
+
+        <div class="main-content">
+            <h2 class="architecture-title">SYSTEM ARCHITECTURE</h2>
+            
+            <div class="mind-map">
+                <div class="connection-line line1"></div>
+                <div class="connection-line line2"></div>
+                <div class="connection-line line3"></div>
+                <div class="connection-line line4"></div>
+                
+                <div class="layer electron-layer" onclick="showDetails('electron')">
+                    <h3>ELECTRON LAYER</h3>
+                    <p>Main process handling database operations and system integration with IPC handlers for secure cross-platform communication</p>
+                </div>
+                
+                <div class="layer data-layer" onclick="showDetails('data')">
+                    <h3>DATA LAYER</h3>
+                    <p>SQLite database with repository pattern for accounts, transactions, and categories with automated schema management</p>
+                </div>
+                
+                <div class="layer presentation-layer" onclick="showDetails('presentation')">
+                    <h3>PRESENTATION LAYER</h3>
+                    <p>React frontend with Material UI components and Chart.js visualizations for real-time financial analytics</p>
+                </div>
+                
+                <div class="layer core-features" onclick="showDetails('features')">
+                    <h3>CORE FEATURES</h3>
+                    <p>Account management, transaction tracking, data import/export, and intelligent reporting with ML categorization</p>
+                </div>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h4>ACCOUNT MANAGEMENT</h4>
+                    <p>Advanced multi-account financial tracking with support for checking, savings, credit cards, investments, and loans. Real-time balance synchronization with intelligent transaction categorization.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h4>TRANSACTION TRACKING</h4>
+                    <p>Comprehensive transaction recording with advanced filtering, search capabilities, and automated status tracking. Smart duplicate detection and reconciliation features.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h4>DATA IMPORT/EXPORT</h4>
+                    <p>Seamless data integration with CSV and Excel files featuring intelligent column mapping, data validation, and flexible export options with custom formatting.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h4>ANALYTICS & REPORTING</h4>
+                    <p>Advanced financial analytics with interactive charts, predictive insights, category breakdowns, and customizable reporting dashboards for strategic financial planning.</p>
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <h3 style="color: #00ffff; margin-bottom: 25px; font-family: 'Courier New', monospace; text-transform: uppercase; letter-spacing: 2px; position: relative; z-index: 10;">INITIALIZE FINANCIAL INTELLIGENCE</h3>
+                <a href="#" class="cta-button">DEPLOY LIBRI.IO</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showDetails(layer) {
+            const details = {
+                electron: {
+                    title: "ELECTRON LAYER SPECIFICATIONS",
+                    content: `
+[SYSTEM] Main Process Architecture
+├── Database Operations: SQLite integration with better-sqlite3
+├── IPC Communication: Secure renderer-main process bridge
+├── System Integration: Cross-platform OS-level features
+├── Security: Context isolation and sandboxed renderer
+└── Performance: Multi-threaded operations with worker processes
+
+[TECH STACK] Electron v35.0.0
+[COMPATIBILITY] Windows | macOS | Linux
+[SECURITY LEVEL] Enterprise Grade
+                    `
+                },
+                data: {
+                    title: "DATA LAYER SPECIFICATIONS",
+                    content: `
+[DATABASE] SQLite with better-sqlite3 driver
+├── Repository Pattern: Clean data access abstraction
+├── Models: Account | Transaction | Category | Payee | Budget
+├── Migrations: Automated schema versioning
+├── Indexing: Optimized query performance
+└── Backup: Automated data protection
+
+[FEATURES] ACID Compliance | Foreign Key Constraints
+[PERFORMANCE] Sub-millisecond query response
+[STORAGE] Local encrypted database files
+                    `
+                },
+                presentation: {
+                    title: "PRESENTATION LAYER SPECIFICATIONS",
+                    content: `
+[FRONTEND] React v19 with Material UI v6
+├── Components: Modular, reusable UI elements
+├── Charts: Chart.js for financial visualizations
+├── Theming: Dynamic dark/light mode support
+├── Responsive: Mobile-first design approach
+└── Accessibility: WCAG 2.1 AA compliance
+
+[FEATURES] Real-time Updates | Interactive Forms
+[PERFORMANCE] Virtual DOM optimization
+[UX] Intuitive financial workflows
+                    `
+                },
+                features: {
+                    title: "CORE FEATURES SPECIFICATIONS",
+                    content: `
+[ACCOUNTS] Multi-type financial account management
+├── Transaction Processing: Real-time categorization
+├── Import/Export: CSV/Excel with intelligent mapping
+├── Reporting: Advanced analytics and insights
+├── Budgeting: Goal tracking and notifications
+└── Security: Local data encryption
+
+[INTELLIGENCE] ML-powered transaction categorization
+[SYNC] Real-time balance updates
+[BACKUP] Automated data protection
+                    `
+                }
+            };
+
+            const detail = details[layer];
+            
+            // Create a more futuristic alert
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.9);
+                backdrop-filter: blur(10px);
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-family: 'Courier New', monospace;
+            `;
+            
+            const content = document.createElement('div');
+            content.style.cssText = `
+                background: rgba(0, 40, 80, 0.95);
+                border: 2px solid #00ffff;
+                border-radius: 20px;
+                padding: 30px;
+                max-width: 600px;
+                color: #00ffff;
+                box-shadow: 0 0 50px rgba(0, 255, 255, 0.5);
+                position: relative;
+            `;
+            
+            content.innerHTML = `
+                <h3 style="margin-bottom: 20px; text-align: center; text-transform: uppercase; letter-spacing: 2px;">${detail.title}</h3>
+                <pre style="white-space: pre-wrap; line-height: 1.4; color: #66d9ff;">${detail.content}</pre>
+                <button onclick="this.parentElement.parentElement.remove()" style="
+                    position: absolute;
+                    top: 10px;
+                    right: 15px;
+                    background: none;
+                    border: none;
+                    color: #00ffff;
+                    font-size: 20px;
+                    cursor: pointer;
+                    padding: 5px;
+                ">✕</button>
+            `;
+            
+            modal.appendChild(content);
+            document.body.appendChild(modal);
+            
+            // Close on backdrop click
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+        }
+
+        // Add matrix-style cursor trail
+        document.addEventListener('mousemove', function(e) {
+            const trail = document.createElement('div');
+            trail.style.cssText = `
+                position: fixed;
+                top: ${e.clientY}px;
+                left: ${e.clientX}px;
+                width: 4px;
+                height: 4px;
+                background: #00ffff;
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 999;
+                box-shadow: 0 0 10px #00ffff;
+                animation: fadeOut 1s ease-out forwards;
+            `;
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeOut {
+                    0% { opacity: 1; transform: scale(1); }
+                    100% { opacity: 0; transform: scale(0); }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            document.body.appendChild(trail);
+            setTimeout(() => trail.remove(), 1000);
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 LIBRI.IO SYSTEM INITIALIZED');
+            console.log('📊 Financial Intelligence Online');
+            console.log('🔒 Security Protocols Active');
+            
+            // Add loading sequence effect
+            const layers = document.querySelectorAll('.layer');
+            layers.forEach((layer, index) => {
+                layer.style.opacity = '0';
+                layer.style.transform = 'translateY(50px) scale(0.8)';
+                
+                setTimeout(() => {
+                    layer.style.transition = 'all 0.8s cubic-bezier(0.23, 1, 0.320, 1)';
+                    layer.style.opacity = '1';
+                    layer.style.transform = 'translateY(0) scale(1)';
+                }, index * 200 + 500);
+            });
+        });
+    </script>
+</body>
+</html>
