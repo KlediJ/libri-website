@@ -1,33 +1,16 @@
-# LIBRI.IO Deployment Links
+# Libri website deployment
 
-## Live Website
-**Production URL:** https://libri-oe2e7sibs-kledi-jenicerris-projects.vercel.app
+Production: https://desktop-libri.com
+Repository: https://github.com/KlediJ/libri-website
+Local checkout: C:\Users\joana\Desktop\libri\libri-website
+Vercel project: libri (kledi-jenicerris-projects)
 
-## Vercel Dashboard
-**Project Dashboard:** https://vercel.com/kledi-jenicerris-projects/libri/ExhK4ZK5AY3gktn564YSM9kwb9j1
+This is a static website with no build step. From this checkout, commit and push the approved changes to main, then publish with:
 
-## Deployment Info
-- **Deployed:** July 12, 2025
-- **Platform:** Vercel
-- **Status:** Production
-- **SSL:** Automatic HTTPS enabled
-- **CDN:** Global distribution
-
-## Update Commands
-To update the website after making changes:
-```bash
-cd C:\Users\joana\Desktop\libri\website
-vercel --prod
+```powershell
+vercel --prod --yes --scope kledi-jenicerris-projects
 ```
 
-## Custom Domain Setup
-1. Buy your domain (libri.io, getlibri.com, etc.)
-2. Go to: https://vercel.com/kledi-jenicerris-projects/libri/settings/domains
-3. Add your custom domain
-4. Follow DNS instructions
+The ignored .vercel/project.json links this folder to the existing project. Do not create a replacement Vercel project. Verify the custom domain and changed assets after deployment.
 
-## Analytics
-View website analytics at: https://vercel.com/kledi-jenicerris-projects/libri/analytics
-
----
-*Last updated: July 12, 2025*
+The approved LIBRI-WEB-001 preview lives in assets/libri-2-preview. Publish only its MP4 and poster, not editable source archives. Playback is user initiated. Keep the forthcoming 2.0 preview distinct from current 1.0 downloads.
