@@ -6,6 +6,7 @@
   const sound = document.getElementById('film-sound');
   const captions = document.getElementById('film-captions');
   const status = document.getElementById('film-status');
+  const fallback = document.getElementById('film-fallback');
   const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const track = video.textTracks[0];
   let playAttempt = 0;
@@ -13,10 +14,18 @@
   const message = text => {
     status.textContent = text;
     status.hidden = !text;
+    fallback.hidden = !text;
   };
   const sync = () => {
-    play.textContent = video.ended ? 'Replay film' : video.paused ? 'Play film' : 'Pause film';
-    sound.textContent = video.muted || video.volume === 0 ? 'Sound on · replay' : 'Mute';
+    const playLabel = video.ended ? 'Replay film' : video.paused ? 'Play film' : 'Pause film';
+    play.setAttribute('aria-label', playLabel);
+    play.title = playLabel;
+    play.dataset.state = video.ended ? 'ended' : video.paused ? 'paused' : 'playing';
+    const silent = video.muted || video.volume === 0;
+    sound.querySelector('span').textContent = silent ? 'Sound on' : 'Mute';
+    sound.setAttribute('aria-label', silent ? 'Replay film with sound' : 'Mute film');
+    sound.title = sound.getAttribute('aria-label');
+    sound.querySelector('.mute-symbol').setAttribute('d', silent ? 'm16 9 5 6m0-6-5 6' : 'M16 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14');
     captions.setAttribute('aria-pressed', String(track?.mode === 'showing'));
   };
   const start = async () => {
@@ -25,7 +34,7 @@
       await video.play();
       if (attempt === playAttempt) message('');
     } catch {
-      if (attempt === playAttempt) message('Press Play film to watch, or open the film using the link below.');
+      if (attempt === playAttempt) message('Press play to watch.');
     }
     sync();
   };
@@ -57,7 +66,7 @@
   video.textTracks.addEventListener('change', sync);
   const mediaError = () => {
     ++playAttempt;
-    message('The film could not load. Try the Open film link below.');
+    message('The film could not load. Open it below to try again.');
     sync();
   };
   video.addEventListener('error', mediaError);
@@ -67,16 +76,18 @@
       ++playAttempt;
       video.autoplay = false;
       video.pause();
-      message('Motion is reduced. Play the film whenever you’re ready.');
+      message('Play when you’re ready.');
     }
   });
   controls.hidden = false;
-  if (track) track.mode = 'showing';
+  video.controls = false;
+  video.tabIndex = -1;
+  if (track) track.mode = 'hidden';
   sync();
   // Start only after checking the visitor’s motion preference. Native controls
   // and the poster remain usable when JavaScript or autoplay is unavailable.
   if (motion.matches) {
-    message('Motion is reduced. Play the film whenever you’re ready.');
+    message('Play when you’re ready.');
   } else {
     video.muted = true;
     video.autoplay = true;
