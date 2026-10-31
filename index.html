@@ -16,7 +16,7 @@
     html { scroll-behavior:smooth; scroll-padding-top:24px; }
     body { background:var(--paper); color:var(--ink); font-family:Arial,Helvetica,sans-serif; line-height:1.65; -webkit-font-smoothing:antialiased; }
     a { color:inherit; text-decoration:none; }
-    a:focus-visible, summary:focus-visible { outline:3px solid #b27327; outline-offset:6px; }
+    a:focus-visible, button:focus-visible, video:focus-visible, summary:focus-visible { outline:3px solid #b27327; outline-offset:6px; }
     img { display:block; max-width:100%; }
     .wrap { width:min(1184px,calc(100% - 80px)); margin-inline:auto; }
     .skip { position:absolute; top:-100px; left:20px; z-index:10; padding:12px; background:white; }
@@ -34,23 +34,27 @@
     .button.secondary { background:transparent; color:var(--green); border-color:#a9b9a9; }
     .button.secondary:hover { background:#e6ebdf; }
     .eyebrow { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.16em; }
-    .hero { display:grid; grid-template-columns:1.2fr 1fr; gap:65px; align-items:center; padding:76px 0 74px; }
+    .hero { display:grid; grid-template-columns:minmax(0,.85fr) minmax(0,1.4fr); gap:40px; align-items:center; padding:52px 0; }
     .status { display:inline-flex; gap:8px; align-items:center; color:var(--green); padding:6px 11px; border:1px solid #c7d2bd; border-radius:99px; font-size:10px; font-weight:700; letter-spacing:.11em; text-transform:uppercase; }
     .status::before { content:''; width:6px; height:6px; border-radius:50%; background:#4a7348; }
     .hero .eyebrow { margin:29px 0 14px; }
-    h1 { font:400 clamp(48px,5.25vw,76px)/1.04 var(--serif); letter-spacing:-.055em; }
+    h1 { font:400 clamp(44px,4.3vw,62px)/1.04 var(--serif); letter-spacing:-.055em; }
     h1 em { color:#4f7150; font-weight:400; }
     .intro { max-width:430px; margin:25px 0 28px; font-size:16px; color:var(--muted); }
     .actions { display:flex; flex-wrap:wrap; gap:12px; }
     .hero-note { font-size:12px; color:var(--muted); margin-top:17px; }
-    .edition-art { position:relative; min-height:430px; display:flex; align-items:center; justify-content:center; background:#e9eddf; border-radius:50% 50% 4px 4px; overflow:hidden; }
-    .edition-art::before { content:''; position:absolute; width:330px; height:330px; border:1px solid #d0d9c3; border-radius:50%; }
-    .edition-art::after { content:''; position:absolute; width:410px; height:410px; border:1px solid #d9e0cd; border-radius:50%; }
-    .book { z-index:1; position:relative; width:224px; height:300px; padding:30px; background:linear-gradient(100deg,#143a2e 0%,#143a2e 5%,#326049 6%,#214b39 10%,#264e3d 100%); border-radius:3px 10px 10px 3px; transform:rotate(-7deg); box-shadow:12px 19px 25px #29433129,4px 3px 0 #e0dfca,7px 6px 0 #f7f4e5,9px 7px 0 #c4cbb7; color:#f3f2da; display:flex; flex-direction:column; justify-content:space-between; }
-    .book-top { font:26px var(--serif); border-bottom:1px solid #b1bc9760; padding-bottom:13px; }
-    .book-number { font:100px/.9 var(--serif); letter-spacing:-7px; }
-    .book-bottom { font-size:9px; text-transform:uppercase; letter-spacing:.19em; border-top:1px solid #b1bc9760; padding-top:14px; }
-    .art-caption { position:absolute; z-index:2; bottom:17px; font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:#516348; }
+    [hidden] { display:none !important; }
+    .hero-film { min-width:0; padding:12px; background:#fffdf7; border:1px solid var(--line); border-radius:12px; box-shadow:0 16px 50px #1c30280d; }
+    .hero-film video { display:block; width:100%; height:auto; aspect-ratio:16/9; object-fit:contain; background:#071610; border-radius:6px; }
+    .film-controls { display:flex; flex-wrap:wrap; align-items:center; gap:8px; padding:12px 0; }
+    .film-controls button { min-height:44px; padding:9px 12px; border:1px solid #a9b9a9; border-radius:5px; background:transparent; color:var(--green); font:600 12px/1.4 Arial,Helvetica,sans-serif; cursor:pointer; }
+    .film-controls button:hover { background:#e6ebdf; }
+    .film-controls .sound-control { background:var(--green); border-color:var(--green); color:white; }
+    .film-controls .sound-control:hover { background:#133828; }
+    .hero-film figcaption { color:var(--muted); font-size:11px; line-height:1.6; }
+    .hero-film figcaption strong { display:block; color:var(--ink); font-size:12px; }
+    .hero-film figcaption a { text-decoration:underline; text-underline-offset:3px; }
+    .film-status { color:var(--green); font-size:12px; margin-bottom:10px; }
     .principle { display:flex; justify-content:space-between; gap:24px; border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:19px 0; font-size:11px; letter-spacing:.065em; text-transform:uppercase; color:var(--muted); }
     .principle span:first-child { color:var(--green); font-weight:700; }
     .section { padding:78px 0; }
@@ -77,12 +81,6 @@
     .announcement h2 { font-size:clamp(38px,4vw,52px); }
     .announcement p { font-size:15px; color:#d4dccb; }
     .announcement p + p { margin-top:16px; }
-    .preview { max-width:380px; margin-top:28px; }
-    .preview video { display:block; width:100%; height:auto; aspect-ratio:16/9; border:1px solid #ffffff40; border-radius:6px; background:#f6f4ed; }
-    .preview video:focus-visible { outline:3px solid #e6c877; outline-offset:5px; }
-    .preview figcaption { margin-top:12px; color:#d4dccb; font-size:12px; line-height:1.6; }
-    .preview figcaption strong { display:block; color:#f4f2df; font-weight:600; }
-    .preview-description { display:block; margin-top:6px; }
     .launch-status { margin-top:25px; padding-top:18px; border-top:1px solid #ffffff30; font-size:11px; letter-spacing:.06em; color:#d4dccb; }
     .faq { display:grid; grid-template-columns:.85fr 1.5fr; gap:70px; }
     .faq .eyebrow { color:var(--green); margin-bottom:14px; }
@@ -98,10 +96,10 @@
     .footer-inner { display:flex; align-items:center; justify-content:space-between; gap:25px; font-size:11px; color:var(--muted); }
     .footer-brand { font:700 23px var(--serif); color:var(--ink); margin-right:18px; }
     .footer-links { display:flex; gap:25px; }
-    @media (max-width:950px) { .wrap { width:calc(100% - 48px); } .hero { gap:32px; } .edition-art { min-height:390px; } .book { width:200px; height:280px; } .nav-links { gap:20px; } .announcement { gap:35px; padding:36px; } }
+    @media (max-width:950px) { .wrap { width:calc(100% - 48px); } .hero { gap:32px; } .nav-links { gap:20px; } .announcement { gap:35px; padding:36px; } }
     @media (max-width:720px) {
       .wrap { width:calc(100% - 36px); } nav { min-height:82px; gap:16px; } .nav-links { gap:14px; } .nav-links .about-link { display:none; } .nav-links .button { padding:10px 13px; min-height:43px; font-size:12px; }
-      .brand { font-size:28px; } .brand img { width:29px; height:29px; } .hero { grid-template-columns:1fr; padding:44px 0 34px; gap:35px; } h1 { font-size:clamp(48px,11vw,70px); } .intro { max-width:100%; } .hero .eyebrow { margin-top:24px; } .edition-art { min-height:340px; border-radius:140px 140px 4px 4px; } .book { width:185px; height:250px; padding:25px; } .book-number { font-size:84px; } .book-top { font-size:23px; } .art-caption { bottom:12px; }
+      .brand { font-size:28px; } .brand img { width:29px; height:29px; } .hero { grid-template-columns:1fr; padding:28px 0 34px; gap:28px; } .hero-film { order:-1; } h1 { font-size:clamp(48px,11vw,70px); } .intro { max-width:100%; } .hero .eyebrow { margin-top:24px; }
       .principle { flex-wrap:wrap; justify-content:center; gap:8px 20px; font-size:9px; } .section { padding:48px 0; } .section-head { display:block; } .section-head > p { margin-top:17px; max-width:100%; } .downloads { grid-template-columns:1fr; gap:16px; } .download { padding:25px; } .workflow { grid-template-columns:1fr; gap:22px; margin-top:29px; } .announcement { grid-template-columns:1fr; padding:30px 25px; gap:25px; } .faq { grid-template-columns:1fr; gap:25px; } .footer-inner { align-items:flex-start; flex-direction:column; gap:17px; } .footer-links { flex-wrap:wrap; gap:22px; }
     }
     @media (max-width:380px) { .nav-links > a:not(.button) { display:none; } .actions { flex-direction:column; align-items:stretch; } .topline { font-size:11px; } }
@@ -128,10 +126,20 @@
           <div class="actions"><a class="button" href="#libri-2">Explore what’s next <span aria-hidden="true">↗</span></a><a class="button secondary" href="#download">Get the current version</a></div>
           <p class="hero-note">Available today: Libri for Windows. Free download on GitHub.</p>
         </div>
-        <div class="edition-art" aria-hidden="true">
-          <div class="book"><div class="book-top">Libri</div><div class="book-number">2.0</div><div class="book-bottom">Your finances. Your story.</div></div>
-          <span class="art-caption">The next chapter · Coming soon</span>
-        </div>
+        <figure class="hero-film">
+          <video id="launch-film" controls muted playsinline preload="none" width="1920" height="1080" tabindex="0" poster="assets/libri-2-launch-v2/poster-v2.png" aria-label="Libri 2.0: Make cents of it. 30-second launch film" aria-describedby="film-caption">
+            <source src="assets/libri-2-launch-v2/libri-launch-30s-v2.mp4" type="video/mp4">
+            <track kind="captions" src="assets/libri-2-launch-v2/libri-launch-v2.vtt" srclang="en" label="English" default>
+            Your browser cannot play this video. <a href="assets/libri-2-launch-v2/libri-launch-30s-v2.mp4">Open the launch film</a>.
+          </video>
+          <div class="film-controls" role="group" aria-label="Launch film controls" hidden>
+            <button type="button" id="film-play" aria-controls="launch-film">Play film</button>
+            <button type="button" id="film-sound" class="sound-control" aria-controls="launch-film">Sound on · replay</button>
+            <button type="button" id="film-captions" aria-controls="launch-film" aria-pressed="true">Captions</button>
+          </div>
+          <p id="film-status" class="film-status" role="status" hidden></p>
+          <figcaption id="film-caption"><strong>Libri 2.0 · Coming soon · 30 seconds</strong>A preview of the forthcoming paid version, using fictional data. Current downloads are for Libri 1.0. <a href="assets/libri-2-launch-v2/libri-launch-30s-v2.mp4">Open film</a>.</figcaption>
+        </figure>
       </section>
       <div class="principle" aria-label="About the current Libri app"><span>Personal finance, on your terms</span><span>Built for Windows</span><span>Local financial data</span><span>You’re in control</span></div>
       <section class="section" id="download" aria-labelledby="download-title">
@@ -159,13 +167,6 @@
       <section class="announcement" id="libri-2" aria-labelledby="next-title">
         <div>
           <p class="eyebrow">The next chapter</p><h2 id="next-title">Libri 2.0.<br>Coming soon.</h2>
-          <figure class="preview">
-            <video controls playsinline preload="none" width="1920" height="1080" tabindex="0" poster="assets/libri-2-preview/libri-2-explore-poster.png" aria-label="Play a 15-second illustrated preview of forthcoming Libri 2.0" aria-describedby="preview-caption">
-              <source src="assets/libri-2-preview/libri-2-explore-15s.mp4" type="video/mp4">
-              <a href="assets/libri-2-preview/libri-2-explore-15s.mp4">Watch the Libri 2.0 illustrated preview (MP4)</a>.
-            </video>
-            <figcaption id="preview-caption"><strong>A glimpse of what’s next · 15 seconds</strong>Illustrated preview of forthcoming Libri 2.0, using fictional data. Not included in the current version.<span class="preview-description">A small transaction review becomes a spending snapshot. Music and effects; no narration.</span></figcaption>
-          </figure>
         </div>
         <div><p>We’re working on a paid version of Libri, with a simple message at its heart: <strong>Privacy for where it matters.</strong></p><p>We’ll share features, pricing, and release details as we get closer to launch. For now, you can get started with the current version.</p><div class="launch-status">In development · Not yet available to purchase</div></div>
       </section>
@@ -181,5 +182,6 @@
     </div>
   </main>
   <footer><div class="wrap footer-inner"><div><span class="footer-brand">Libri</span>Privacy for where it matters.</div><div class="footer-links"><a href="https://github.com/KlediJ/personal-finance-manager/releases">Release notes</a><a href="https://apps.microsoft.com/detail/9PHT2DR2M4XF">Microsoft Store</a><a href="#main">Back to top ↑</a></div></div></footer>
+  <script src="hero-video.js" defer></script>
 </body>
 </html>
