@@ -1,90 +1,133 @@
 (() => {
-  const dialog = document.getElementById('journey-player');
-  if (!dialog || typeof dialog.showModal !== 'function') return;
-  const video = document.getElementById('journey-video');
-  const title = document.getElementById('journey-player-title');
-  const description = document.getElementById('journey-player-description');
-  const toggle = document.getElementById('journey-toggle');
-  const status = document.getElementById('journey-player-status');
-  const direct = document.getElementById('journey-open-file');
-  let opener;
-  let previousOverflow = '';
-  let attempt = 0;
-  const message = text => {
-    status.textContent = text;
-    status.hidden = !text;
+  if (!('IntersectionObserver' in window)) return;
+  const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const scenes = [...document.querySelectorAll('.journey-scene')].map(element => ({
+    element,
+    media: element.querySelector('.journey-media'),
+    video: element.querySelector('.journey-animation'),
+    images: [...element.querySelectorAll('.journey-still img')],
+    toggle: element.querySelector('.journey-toggle'),
+    mode: element.querySelector('.journey-mode'),
+    expand: element.querySelector('.journey-expand'),
+    still: motion.matches,
+    paused: false,
+    failed: false,
+    playingRequest: 0,
+    ratio: 0
+  }));
+  let active = null;
+  const sync = scene => {
+    const label = scene.video.paused ? 'Play animation' : 'Pause animation';
+    scene.toggle.querySelector('.journey-toggle-label').textContent = label;
+    scene.toggle.querySelector('.journey-toggle-icon').textContent = scene.video.paused ? '▷' : 'Ⅱ';
+    scene.toggle.setAttribute('aria-label', label + ': ' + scene.element.querySelector('h3').textContent);
+    scene.mode.textContent = scene.still ? 'View animation' : 'View still';
+    scene.mode.hidden = scene.still || scene.failed;
+    scene.element.dataset.view = scene.still ? 'still' : 'animation';
+    scene.expand.hidden = scene.still || scene.video.hidden;
   };
-  const sync = () => {
-    toggle.textContent = video.ended ? 'Replay' : video.paused ? 'Play' : 'Pause';
+  const stop = scene => {
+    ++scene.playingRequest;
+    scene.video.pause();
+    sync(scene);
   };
-  const play = async () => {
-    const current = ++attempt;
+  const showStill = scene => {
+    stop(scene);
+    scene.still = true;
+    scene.video.hidden = true;
+    scene.media.classList.remove('motion-ready');
+    scene.images.forEach(image => { image.hidden = false; });
+    sync(scene);
+  };
+  const showVideo = scene => {
+    if (scene.still || scene.failed) return;
+    scene.video.hidden = false;
+    scene.images.forEach(image => { image.hidden = true; });
+    sync(scene);
+  };
+  const start = async scene => {
+    if (scene.failed) return;
+    scenes.forEach(other => { if (other !== scene) stop(other); });
+    document.getElementById('launch-film')?.pause();
+    active = scene;
+    scene.still = false;
+    scene.media.classList.add('motion-ready');
+    if (!scene.video.getAttribute('src')) scene.video.src = scene.video.dataset.src;
+    if (scene.video.readyState >= 2) showVideo(scene);
+    const request = ++scene.playingRequest;
     try {
-      await video.play();
-      if (current === attempt && dialog.open) message('');
+      await scene.video.play();
+      if (request !== scene.playingRequest) return;
+      showVideo(scene);
     } catch {
-      if (current === attempt && dialog.open) message('Press Play to try again, or choose Open video.');
+      if (request !== scene.playingRequest) return;
+      // Keep a readable result if the browser blocks automatic playback.
+      scene.paused = true;
+      showStill(scene);
     }
-    sync();
+    sync(scene);
   };
-  document.querySelectorAll('.journey-watch').forEach(link => {
-    link.setAttribute('aria-haspopup', 'dialog');
-    link.addEventListener('click', event => {
-      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-      event.preventDefault();
-      opener = link;
-      document.querySelectorAll('video').forEach(other => { if (other !== video) other.pause(); });
-      title.textContent = document.getElementById(link.dataset.scene + '-title').textContent;
-      description.textContent = 'Libri 2.0 preview. Silent clip. ' + link.dataset.disclosure;
-      video.setAttribute('aria-label', title.textContent + ' Silent Libri 2.0 demonstration.');
-      video.poster = link.dataset.poster;
-      video.src = link.href;
-      direct.href = link.href;
-      message('');
-      previousOverflow = document.body.style.overflow;
-      document.body.style.overflow = 'hidden';
-      dialog.showModal();
-      play();
+  const update = () => {
+    if (document.hidden) { scenes.forEach(stop); return; }
+    const candidate = scenes.filter(s => s.ratio >= .45 && !s.still && !s.paused && !s.failed)
+      .sort((a,b) => b.ratio - a.ratio)[0];
+    if (active && (active.ratio < .2 || active !== candidate)) stop(active);
+    if (candidate && candidate.video.paused) start(candidate);
+  };
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      const scene = scenes.find(s => s.media === entry.target);
+      if (scene) scene.ratio = entry.intersectionRatio;
     });
+    update();
+  }, { threshold:[0,.2,.45,.65,.85,1] });
+  scenes.forEach(scene => {
+    scene.element.querySelector('.journey-animation-controls').hidden = false;
+    if (!scene.still) scene.media.classList.add('motion-ready');
+    scene.video.addEventListener('loadeddata', () => showVideo(scene));
+    ['play','pause'].forEach(event => scene.video.addEventListener(event, () => sync(scene)));
+    scene.video.addEventListener('error', () => {
+      scene.failed = true;
+      showStill(scene);
+      scene.toggle.querySelector('.journey-toggle-label').textContent = 'Animation unavailable';
+      scene.toggle.disabled = true;
+      scene.mode.hidden = true;
+    });
+    scene.toggle.addEventListener('click', () => {
+      if (!scene.video.paused) {
+        scene.paused = true;
+        stop(scene);
+      } else {
+        scene.paused = false;
+        start(scene);
+      }
+    });
+    scene.mode.addEventListener('click', () => {
+      if (scene.still) {
+        scene.paused = false;
+        start(scene);
+      } else {
+        scene.paused = true;
+        showStill(scene);
+      }
+    });
+    scene.expand.addEventListener('click', async () => {
+      try {
+        scene.video.controls = true;
+        if (scene.video.requestFullscreen) await scene.video.requestFullscreen();
+        else if (scene.video.webkitEnterFullscreen) scene.video.webkitEnterFullscreen();
+        else scene.video.controls = false;
+      } catch { scene.video.controls = false; }
+    });
+    scene.video.addEventListener('webkitendfullscreen', () => { scene.video.controls = false; });
+    observer.observe(scene.media);
+    sync(scene);
   });
-  document.getElementById('journey-close').addEventListener('click', () => dialog.close());
-  dialog.addEventListener('close', () => {
-    ++attempt;
-    video.pause();
-    video.removeAttribute('src');
-    video.load();
-    document.body.style.overflow = previousOverflow;
-    opener?.focus({ preventScroll:true });
+  document.addEventListener('fullscreenchange', () => {
+    scenes.forEach(scene => { if (document.fullscreenElement !== scene.video) scene.video.controls = false; });
   });
-  toggle.addEventListener('click', () => {
-    if (video.paused || video.ended) {
-      if (video.ended) video.currentTime = 0;
-      play();
-    } else {
-      ++attempt;
-      video.pause();
-    }
-  });
-  ['play', 'pause', 'ended'].forEach(event => video.addEventListener(event, sync));
-  video.addEventListener('error', () => {
-    if (!dialog.open) return;
-    ++attempt;
-    message('This clip could not load. Choose Open video to try it directly.');
-  });
-  document.getElementById('journey-fullscreen').addEventListener('click', async () => {
-    try {
-      if (video.requestFullscreen) await video.requestFullscreen();
-      else if (video.webkitEnterFullscreen) video.webkitEnterFullscreen();
-      else message('Choose Open video for your device’s full-size player.');
-    } catch {
-      message('Choose Open video for your device’s full-size player.');
-    }
-  });
-  window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', event => {
-    if (event.matches && dialog.open) {
-      ++attempt;
-      video.pause();
-      message('Paused for reduced motion. Press Play whenever you’re ready.');
-    }
+  document.addEventListener('visibilitychange', update);
+  motion.addEventListener('change', () => {
+    if (motion.matches) scenes.forEach(scene => { scene.paused = true; showStill(scene); });
   });
 })();
